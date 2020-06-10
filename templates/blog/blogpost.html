@@ -1,0 +1,113 @@
+{% extends 'base.html' %}
+{% block title%}Post{% endblock title%}
+{% block blogactive %} active {% endblock blogactive %}
+{% block body %}
+{% load static %}
+{% load extras %}
+<div class="overflow-hidden text-center text-white bg-dark">
+  <div class="col-md-5 p-lg-5 mx-auto my-1">
+    <h4 class="display-5 font-weight-normal">{{post.title}}</h4>
+    <p class="lead ">Article By {{post.author}}</p>
+    <p class="lead ">{{post.timestamp}}</p>
+    <a class="btn btn-outline-light" href="/blog">Back to Blogs</a>
+  </div>
+  <div class="product-device shadow-sm d-none d-md-block"></div>
+  <div class="product-device product-device-2 shadow-sm d-none d-md-block"></div>
+</div>
+<div class="card container-fluid">
+  <div class="card-body">
+    <h5 class="card-title">Aricle</h5>
+    <p class="card-text">{{post.content}}</p>
+    <hr class="featurette-divider">
+    <h5 class="card-title">Comments <span class="badge badge-secondary">{{comments.count}}</span></h5>
+    {% for comment in comments %}
+    <div class="row featurette container">
+      <div class="col-md-2">
+
+        <img src="{% static "image/user.webp" %}" style="width:100px; height:100px;" class=" rounded">
+        </svg>
+      </div>
+      <div class="col-md-10">
+        <h4 class="featurette-heading"> {{comment.user.first_name}}<h6><span
+              class="text-muted">{{comment.timestamp}}</span></h6>
+        </h4>
+        <p class="lead">{{comment.comment}}</p>
+        <a style="text-decoration:none;" data-toggle="collapse" href="#reply{{comment.sno}}" role="button"
+          aria-expanded="false" aria-controls="reply{{comment.sno}}">
+          <h4> <span class="badge badge-info">Reply</span></h4>
+        </a>
+        <div class="collapse" id="reply{{comment.sno}}">
+          <div class="card card-body">
+            {% if user.is_authenticated %}
+            <form class="form" action="/blog/postcomment" method="post">{% csrf_token %}
+              <div class="form-group mx-sm-3 mb-2">
+                <input type="hidden" value="{{comment.sno}}" name="parentSno">
+                <h5> Reply</h5>
+                <input type="text" class="form-control" id="inputReply" placeholder="Addd a reply.">
+                <input type="hidden" value="{{post.sno}}" name="postSno">
+                <button type="submit" class="btn btn-outline-dark my-2">Reply</button>
+              </div>
+            </form>
+            {% else %}
+            <div class="jumbotron">
+              <h1>Wana Give Feedbacks</h1>
+              <p class="lead">if want to give feedbacks please Log in if you have account otherwise signup.</p>
+              <button type="button" class="btn btn-outline-dark" data-toggle="modal" data-target="#SignIn">
+                Sign in
+              </button>
+              <!-- Button SignUp modal -->
+              <button type="button" class="btn btn-outline-dark" data-toggle="modal" data-target="#SignUp">
+                Sign Up
+              </button>
+            </div>
+            {% endif %}
+            <h5> Replies</h5>
+            {% for reply in replyDict|get_val:comment.sno %}
+            <div class="row featurette mx-sm-3 mb-2">
+              <div class="col-md-2">
+                <img src="{% static "image/user.webp" %}" style="width:50px; height:50px;" class=" rounded">
+                </svg>
+              </div>
+              <div class="col-md-10">
+                <h6 class="featurette-heading"> {{reply.user.first_name}}<h6><span
+                      class="text-muted">{{reply.timestamp}}</span></h6>
+                </h6>
+                <p class="lead">{{reply.comment}}</p>
+
+              </div>
+
+            </div>
+            <hr class="featurette-divider">
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+    <hr class="featurette-divider">
+    {% endfor %}
+    <h5 class="card-title"> Add Comments:</h5>
+    {% if user.is_authenticated %}
+    <form action="/blog/postcomment" method="post">{% csrf_token %}
+      <div class="form-group">
+        <input type="hidden" value="{{post.sno}}" name="postSno">
+        <textarea class="form-control" placeholder="Comment Here..." name="comment"></textarea>
+        <button type="submit" class="btn btn-outline-dark my-2">Comment</button>
+        <input type="hidden" value="" name="parentSno">
+      </div>
+    </form>
+    {% else %}
+    <div class="jumbotron">
+      <h1>Wana Give Feedbacks</h1>
+      <p class="lead">if want to give feedbacks please Log in if you have account otherwise signup.</p>
+      <button type="button" class="btn btn-outline-dark" data-toggle="modal" data-target="#SignIn">
+        Sign in
+      </button>
+      <!-- Button SignUp modal -->
+      <button type="button" class="btn btn-outline-dark" data-toggle="modal" data-target="#SignUp">
+        Sign Up
+      </button>
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock body %}

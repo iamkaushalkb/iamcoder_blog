@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block title%}Home{% endblock title%}
+{% block homeactive %} active {% endblock homeactive %}
+{% block body %}
+<div class="overflow-hidden text-center text-white bg-dark">
+  <div class="col-md-5 p-lg-5 mx-auto my-1">
+    <h4 class="display-5 font-italic">Welcome to iamcoder</h4>
+    <p class="lead ">a bloging site</p>
+  </div>
+  <div class="product-device shadow-sm d-none d-md-block"></div>
+  <div class="product-device product-device-2 shadow-sm d-none d-md-block"></div>
+</div><br>
+{% for post in allPosts %}
+<div class="card mb-4 shadow-sm container-fluid">
+  <div class="card-body">
+    <p class="card-text">{{post.title}}</p>
+    <p class="card-text">{{post.content}}...</p>
+    <div class="d-flex justify-content-between align-items-center">
+      <div class="btn-group">
+        <a href="/blog/{{post.slug}}" class="btn btn-sm btn-outline-dark ">Read more.</a>
+      </div>
+      <small class="text-muted">{{post.timestamp}}</small>
+    </div>
+  </div>
+</div>
+{% endfor %}
+{% endblock body %}

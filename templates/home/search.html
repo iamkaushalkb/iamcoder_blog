@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% block title%}Search Results{% endblock title%}
+{% block body %}<br>
+<main role="main">
+  <div class="starter-template container-fluid">
+    <h4>Search Results:</h4>
+  </div>
+  {% if allPosts|length <= 0 %}
+  <div class="starter-template container-fluid">
+    <h5>No Search Results Found</h5>
+    Your search - {{query}} - did not match any documents.<br>
+    Suggestions:<br>
+    Make sure that all words are spelled correctly.
+    <ul>
+      <li>Try different keywords.</li>
+      <li>Try more general keywords.</li>
+      <li>Try fewer general keywords.</li>
+    </ul>
+  </div>
+  {% endif %}
+  {% for post in allPosts %}
+  <div class="container-fluid ">
+    <div class="jumbotron p-4 p-md-5 text-black rounded bg-light">
+      <div class="col-md-6 px-0">
+        <h3 class="display-5 font-italic">{{post.title}}
+          <p class="lead my-3">{{post.content|truncatechars:50}}...</p>
+          <p class="lead my-3">Article by {{post.author}}</p>
+          <p class="lead my-3">{{post.timestamp}}</p>
+          <p class="lead mb-0"><a href="/blog/{{post.slug}}" class="text-black font-weight-bold">Continue reading...</a>
+          </p>
+      </div>
+    </div>
+
+  </div>
+  {% endfor %}
+</main>
+{% endblock body %}
